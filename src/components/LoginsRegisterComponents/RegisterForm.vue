@@ -46,16 +46,22 @@ const registerAuth = async (e) => {
 </script>
 
 <template>
-  <div>
-    
-    <form @submit.prevent="registerAuth" class="flex flex-col border-4 w-[30vh] items-center justify-center p-3 gap-3">
-      <input v-model="email" type="email" name="email" id="email" placeholder="Ingresa tu email" class="bg-gray-400">
-      <input v-model="password" type="password" name="password" id="password" placeholder="Ingresa tu contraseña" class="bg-gray-400">
-      <button type="submit" class="bg-red-500">Registrarme</button>
-    </form>
-    <button> <router-link to="/login">Ir a Iniciar sesión</router-link></button>
+  <div class="flex flex-col items-center justify-center min-h-screen bg-blue-500">
+    <div class="bg-white border-4 border-black rounded-lg shadow-lg p-6 w-80 text-center relative">
+      <!-- Contenido -->
+      <h1 class="text-xl font-bold text-gray-800 mt-12">¡Regístrate!</h1>
+      <form @submit.prevent="registerAuth" class="flex flex-col gap-3 mt-4">
+        <input v-model="email" type="email" name="email" id="email" placeholder="Ingresa tu email" class="p-2 border-2 border-black rounded bg-gray-100 text-black text-center">
+        <input v-model="password" type="password" name="password" id="password" placeholder="Ingresa tu contraseña" class="p-2 border-2 border-black rounded bg-gray-100 text-black text-center">
+        <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded border-2 border-black">
+          Registrarme
+        </button>
+      </form>
+      <router-link to="/login" class="text-blue-600 font-semibold mt-4 inline-block hover:underline">Ir a Iniciar sesión</router-link>
+    </div>
   </div>
 </template>
+
 
 <style scoped>
 </style>

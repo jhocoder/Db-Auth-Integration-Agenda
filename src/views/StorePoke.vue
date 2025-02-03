@@ -3,20 +3,23 @@ import { onMounted, ref } from 'vue';
 import { usePokeStore } from '@/stores/storePoke';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from '../../firestore/sdk';
+import { useRouter } from 'vue-router';
 import { collection, addDoc, setDoc, arrayUnion, updateDoc, doc } from 'firebase/firestore';
 
 const auth = getAuth();
 const currentUser = ref(null)
 const currentPoke = ref(null)
+const router = useRouter();
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    currentUser.value = user;
-    console.log(currentUser.value);
-  } else {
-    console.log("no hay");
-  }
-});
+
+// onAuthStateChanged(auth, (user) => {
+//   if (user) {
+//     currentUser.value = user;
+//     console.log(currentUser.value);
+//   } else {
+//     alert("Necesitas estar logeado para añadir favoritos")
+//   }
+// });
 
 const pokeStore = usePokeStore();
 const renderAllPokemons = ref([]);
@@ -29,14 +32,20 @@ const seePok = async () => {
 }
 
 const verifiedUser = async (pokemon) => {
-  if (currentUser.value) {
-    const userRef = doc(db, "users", currentUser.value.uid);
+  const currentUser = auth.currentUser; // Obtener el usuario autenticado actual directamente
+
+  if (currentUser) {
+    const userRef = doc(db, "users", currentUser.uid);
     await updateDoc(userRef, {
       favoritos: arrayUnion(pokemon.name)
     });
     console.log("Agregado")
+  } else {
+    router.push("/login");
+    alert("Necesitas estar logeado para añadir favoritos");
   }
 }
+
 
 </script>
 
@@ -76,7 +85,12 @@ const verifiedUser = async (pokemon) => {
         <p v-for="(item, index) in pokemon.abilities" :key="index">
           {{ item.ability.name }}
         </p>
-        <button class="bg-green-100" @click="verifiedUser(pokemon)">add to fav</button>
+        <button 
+  @click="verifiedUser(pokemon)" 
+  class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400">
+  Add to Fav
+</button>
+
       </div>
     </section>
   </div>

@@ -5,7 +5,7 @@ import { RouterLink, RouterView } from 'vue-router';
 <template>
   <!-- Encabezado del menú -->
   <header class="bg-red-500 shadow-md">
-    <nav class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+    <nav class="max-w-6xl mx-auto flex justify-between items-center h-[15vh]">
       <!-- Logo o título -->
       <div class="text-white font-extrabold text-2xl">
         PokéApp
@@ -14,7 +14,7 @@ import { RouterLink, RouterView } from 'vue-router';
       <ul class="flex space-x-6">
         <li>
           <RouterLink 
-            to="/home"
+            to="/"
             class="text-white hover:text-red-200 transition-colors duration-300"
           >
             Home
@@ -41,7 +41,7 @@ import { RouterLink, RouterView } from 'vue-router';
   </header>
 
   <!-- Vista principal -->
-  <main class="mt-6">
+  <main class="">
     <RouterView />
   </main>
 </template>
