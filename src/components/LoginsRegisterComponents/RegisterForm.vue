@@ -1,8 +1,11 @@
+
 <script setup>
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { db } from '../../../firestore/sdk';
+import { doc, setDoc } from 'firebase/firestore';
 import { app } from '../../../firestore/sdk';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router'; 
+import { useRouter } from 'vue-router';
 
 const auth = getAuth(app)
 const email = ref("")
@@ -13,9 +16,28 @@ const router = useRouter();
 const registerAuth = async (e) => {
   e.preventDefault(); 
   try {
+    // Crear usuario en Firebase Auth
     const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value);
     const userNow = userCredential.user;
     console.log(userNow);
+
+    // Crear documento en Firestore con el uid de Auth como ID
+    const userRef = doc(db, "users", userNow.uid);  // Usamos el UID de Auth como el ID de Firestore
+
+    try {
+      await setDoc(userRef, {
+        email: email.value,
+        password: password.value,
+        uid: userNow.uid,  // Guardamos también el uid
+        favoritos: []  // Lista vacía de favoritos al inicio
+      });
+
+      console.log("Usuario agregado en Firestore con UID como ID");
+    } catch (error) {
+      console.log("No se puede agregar el usuario en Firestore", error);
+    }
+
+    // Redirigir a la página de perfil
     router.push('/profile');
   } catch (error) {
     console.error("Error al registrar el usuario:", error.message);
@@ -37,3 +59,7 @@ const registerAuth = async (e) => {
 
 <style scoped>
 </style>
+
+
+
+

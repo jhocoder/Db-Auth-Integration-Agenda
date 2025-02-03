@@ -1,22 +1,22 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { usePokeStore } from '@/stores/storePoke';
-
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { db } from '../../firestore/sdk';
+import { collection, addDoc, setDoc, arrayUnion, updateDoc, doc } from 'firebase/firestore';
 
 const auth = getAuth();
 const currentUser = ref(null)
+const currentPoke = ref(null)
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    currentUser.value =  user
-    console.log(currentUser.value)
-    // ...
+    currentUser.value = user;
+    console.log(currentUser.value);
   } else {
-    console.log("no hay")
+    console.log("no hay");
   }
 });
-
 
 const pokeStore = usePokeStore();
 const renderAllPokemons = ref([]);
@@ -28,15 +28,15 @@ const seePok = async () => {
   console.log(renderAllPokemons.value);
 }
 
-
-// const verifiedUser = async () => {
-//   const userID = auth.currentUser.uid
-//   if(userID){
-//     console.log("Usuario se encuentra logeado")
-//   } else {
-//     console.log("Usuario no se encuentra logeado")
-//   }
-// }
+const verifiedUser = async (pokemon) => {
+  if (currentUser.value) {
+    const userRef = doc(db, "users", currentUser.value.uid);
+    await updateDoc(userRef, {
+      favoritos: arrayUnion(pokemon.name)
+    });
+    console.log("Agregado")
+  }
+}
 
 </script>
 
@@ -74,11 +74,10 @@ const seePok = async () => {
           class="w-full h-40 object-contain mb-4"
         />
         <p v-for="(item, index) in pokemon.abilities" :key="index">
-  {{ item.ability.name }}
+          {{ item.ability.name }}
         </p>
-        <button class="bg-green-100">add to fav</button>
+        <button class="bg-green-100" @click="verifiedUser(pokemon)">add to fav</button>
       </div>
-      
     </section>
   </div>
 </template>
