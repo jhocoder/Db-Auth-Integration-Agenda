@@ -54,7 +54,7 @@ const verifiedUser = async (pokemon) => {
         @click="seePok"
         class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-full font-medium transition-colors duration-300"
       >
-        Ver Pokémon
+        Ver Pokémon!
       </button>
     </div>
 
